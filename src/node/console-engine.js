@@ -51,8 +51,8 @@ class ConsoleEngine {
     const context = this.getSession(sessionId);
     const output = [];
     
-    // Capture console output
-    context.console._output = output;
+    // Capture console output by replacing the console object
+    context.console = this.createConsoleProxy(output);
 
     try {
       const script = new vm.Script(code, {
@@ -96,26 +96,26 @@ class ConsoleEngine {
 
   /**
    * Create a console proxy that captures output
+   * @param {Array} output - Array to capture output to
    * @returns {Object} Console-like object that captures output
    */
-  createConsoleProxy() {
+  createConsoleProxy(output = []) {
     return {
-      _output: [],
       log: (...args) => {
-        const message = args.map(arg => this.formatValue(arg)).join(' ') + '\n';
-        this._output.push(message);
+        const message = args.map(arg => this.formatConsoleValue(arg)).join(' ') + '\n';
+        output.push(message);
       },
       error: (...args) => {
-        const message = 'ERROR: ' + args.map(arg => this.formatValue(arg)).join(' ') + '\n';
-        this._output.push(message);
+        const message = 'ERROR: ' + args.map(arg => this.formatConsoleValue(arg)).join(' ') + '\n';
+        output.push(message);
       },
       warn: (...args) => {
-        const message = 'WARN: ' + args.map(arg => this.formatValue(arg)).join(' ') + '\n';
-        this._output.push(message);
+        const message = 'WARN: ' + args.map(arg => this.formatConsoleValue(arg)).join(' ') + '\n';
+        output.push(message);
       },
       info: (...args) => {
-        const message = 'INFO: ' + args.map(arg => this.formatValue(arg)).join(' ') + '\n';
-        this._output.push(message);
+        const message = 'INFO: ' + args.map(arg => this.formatConsoleValue(arg)).join(' ') + '\n';
+        output.push(message);
       },
     };
   }
@@ -144,11 +144,30 @@ class ConsoleEngine {
   }
 
   /**
-   * Format a value for display
+   * Format a value for display as return value
    * @param {*} value - Value to format
    * @returns {string} Formatted string representation
    */
   formatValue(value) {
+    if (value === undefined) return 'undefined';
+    if (value === null) return 'null';
+    if (typeof value === 'string') return JSON.stringify(value);
+    if (typeof value === 'function') return `[Function: ${value.name || 'anonymous'}]`;
+    if (value instanceof Error) return value.stack || value.toString();
+    
+    try {
+      return JSON.stringify(value, null, 2);
+    } catch (err) {
+      return value.toString();
+    }
+  }
+
+  /**
+   * Format a value for console output (without quotes for strings)
+   * @param {*} value - Value to format
+   * @returns {string} Formatted string representation
+   */
+  formatConsoleValue(value) {
     if (value === undefined) return 'undefined';
     if (value === null) return 'null';
     if (typeof value === 'string') return value;
@@ -170,7 +189,7 @@ class ConsoleEngine {
   truncateOutput(output) {
     if (output.length > this.maxOutputLength) {
       return output.substring(0, this.maxOutputLength) + 
-             `\n... (output truncated, ${output.length - this.maxOutputLength} characters omitted)`;
+             `\n... (truncated, ${output.length - this.maxOutputLength} characters omitted)`;
     }
     return output;
   }
