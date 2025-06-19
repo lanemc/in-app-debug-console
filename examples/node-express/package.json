@@ -1,0 +1,17 @@
+{
+  "name": "debug-console-node-example",
+  "version": "1.0.0",
+  "description": "Example Node.js/Express app with In-App Debug Console",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js"
+  },
+  "dependencies": {
+    "express": "^4.18.0",
+    "express-session": "^1.17.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.0"
+  }
+}

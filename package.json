@@ -1,0 +1,55 @@
+{
+  "name": "@thesaasdevkit/in-app-debug-console",
+  "version": "1.0.0",
+  "description": "A secure, built-in mini REPL console for web applications that enables developers to inspect server state and execute debug commands on a running app",
+  "main": "dist/index.js",
+  "module": "dist/index.esm.js",
+  "files": [
+    "dist/",
+    "src/",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "test": "jest",
+    "example:node": "node examples/node-express/app.js",
+    "build": "npm run build:rollup && npm run build:ui",
+    "build:rollup": "rollup -c",
+    "build:ui": "mkdir -p dist && if [ -d src/ui ] && [ \"$(ls -A src/ui)\" ]; then cp -r src/ui/* dist/; fi",
+    "prepublishOnly": "npm test && npm run build"
+  },
+  "keywords": [
+    "debug",
+    "console",
+    "repl",
+    "express",
+    "node",
+    "development",
+    "production",
+    "debugging"
+  ],
+  "author": "Smart Console Debugger Team",
+  "license": "MIT",
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^28.0.6",
+    "@rollup/plugin-json": "^6.1.0",
+    "@rollup/plugin-node-resolve": "^16.0.1",
+    "@rollup/plugin-terser": "^0.4.4",
+    "jest": "^29.0.0",
+    "rollup": "^2.79.2"
+  },
+  "dependencies": {
+    "express": "^4.18.0"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/smart-console-debugger/in-app-debug-console"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  }
+}
