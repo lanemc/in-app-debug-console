@@ -46,7 +46,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/smart-console-debugger/in-app-debug-console"
+    "url": "https://github.com/lanemc/in-app-debug-console"
   },
   "publishConfig": {
     "access": "public",
