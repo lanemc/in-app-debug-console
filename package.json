@@ -1,6 +1,6 @@
 {
   "name": "@thesaasdevkit/in-app-debug-console",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A secure, built-in mini REPL console for web applications that enables developers to inspect server state and execute debug commands on a running app",
   "main": "dist/index.js",
   "module": "dist/index.esm.js",
